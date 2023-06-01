@@ -31,7 +31,7 @@ export class PizzaService {
   // You may add any parameters and return any type from getOrders() method
   // Do not change the method name
   getOrders(order: Order) {
-    return this.http.get<any>('/api/order/${order.email}').subscribe((response) => {
+    return this.http.get<any>('/api/orders/${order.email}').subscribe((response) => {
       this.orders = response;
     })
 
@@ -41,7 +41,10 @@ export class PizzaService {
   // TODO: Task 7
   // You may add any parameters and return any type from delivered() method
   // Do not change the method name
-  delivered() {
+  delivered(order: Order) {
+    return this.http.get<any>('/api/order/${order.orderId}').subscribe((response) => {
+      this.orders = response;
+   })
   }
 
   deleteOrder(order: Order){

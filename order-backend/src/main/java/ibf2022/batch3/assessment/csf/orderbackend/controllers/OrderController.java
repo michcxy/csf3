@@ -1,7 +1,5 @@
 package ibf2022.batch3.assessment.csf.orderbackend.controllers;
 
-
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +73,7 @@ public class OrderController {
 	}
 
 	// TODO: Task 6 - GET /api/orders/<email>
-	@GetMapping(path="/order/{email}")
+	@GetMapping(path="/orders/{email}")
 	public List<PizzaOrder> getOrdersByEmail(@PathVariable String email){
 		List<PizzaOrder> orders = orderSvc.getPendingOrdersByEmail(email);
         return orders;
@@ -83,7 +81,8 @@ public class OrderController {
 
 	// TODO: Task 7 - DELETE /api/order/<orderId>
 	@DeleteMapping("/order/{orderId}")
-    public void deleteOrder(@PathVariable String orderId) {
-        orderSvc.markOrderDelivered(orderId);
+    public boolean deleteOrder(@PathVariable String orderId) {
+        return orderSvc.markOrderDelivered(orderId);
+		
     }
 }
