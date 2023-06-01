@@ -34,10 +34,10 @@ public class OrderingService {
 	// TODO: Task 5
 	// WARNING: DO NOT CHANGE THE METHOD'S SIGNATURE
 	public PizzaOrder placeOrder(PizzaOrder order) throws OrderException {
-		
+
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.setAccept((List<MediaType>) MediaType.TEXT_PLAIN);
+			headers.setAccept(List.of(MediaType.TEXT_PLAIN));
 	
 			MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 			body.add("name", order.getName());
