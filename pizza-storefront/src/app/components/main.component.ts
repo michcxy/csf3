@@ -51,13 +51,14 @@ export class MainComponent {
     .then(result => {
       alert('ordered')
       this.form.reset()
+      this.email = this.form.value['email']
+      this.router.navigate(['/orders', this.email])
     })
     .catch(err => {
       alert(JSON.stringify(err))
     })
     this.sendOrderToService(order)
-    this.email = this.form.value['email']
-    this.router.navigate(['/orders', this.email])
+    
   }
 
   sendOrderToService(order: Order) {
