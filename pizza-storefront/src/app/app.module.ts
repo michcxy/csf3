@@ -11,7 +11,8 @@ import { PizzaService } from './pizza.service';
 
 const appRoutes: Routes = [
   {path: '', component: MainComponent},
-  {path: 'orders/{email}', component: OrdersComponent},
+  {path: 'orders', component: OrdersComponent},
+  {path: 'orders/:email', component: OrdersComponent},
   {path: '**', redirectTo: '/', pathMatch:'full'} 
 ]
 

@@ -1,5 +1,7 @@
 package ibf2022.batch3.assessment.csf.orderbackend.services;
 
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,21 +29,12 @@ public class OrderingService {
 	@Autowired
 	private PendingOrdersRepository pendingOrdersRepo;
 
-	private static String URL = "https://pizza-pricing-production.up.railway.app";
+	private static String URL = "https://pizza-pricing-production.up.railway.app/order";
 	
 	// TODO: Task 5
 	// WARNING: DO NOT CHANGE THE METHOD'S SIGNATURE
 	public PizzaOrder placeOrder(PizzaOrder order) throws OrderException {
-		String orderUrl = UriComponentsBuilder.fromUriString(URL)
-            .queryParam("name", order.getName())
-            .queryParam("email", order.getEmail())
-            .queryParam("sauce", order.getSauce())
-			.queryParam("size", order.getSize())
-			.queryParam("thickCrust", order.getThickCrust())
-			.queryParam("toppings", order.getToppings())
-			.queryParam("comments", order.getComments())
-            .toUriString();
-
+		
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 			headers.setAccept((List<MediaType>) MediaType.TEXT_PLAIN);
@@ -56,7 +49,7 @@ public class OrderingService {
 			body.add("comments", order.getComments());
 
 			RequestEntity<MultiValueMap<String, String>> requestEntity = RequestEntity
-                .post(orderUrl)
+                .post(URL)
                 .headers(headers)
                 .body(body);
 
@@ -65,18 +58,14 @@ public class OrderingService {
 		
 				if (response.getStatusCode() == HttpStatus.OK) {
 					String responseBody = response.getBody();
-					System.out.println(responseBody);
+					List<String> responseValues = Arrays.asList(responseBody.split(","));
+					order.setOrderId(responseValues.get(0));
+					order.setDate(new Date(Long.parseLong(responseValues.get(1))));
+					order.setTotal(Float.parseFloat(responseValues.get(2)));
+					return order;
 				}
-			
-			// RequestEntity<Void> req = RequestEntity
-            //     .get(orderUrl)
-            //     .setContentType(MediaType.APPLICATION_FORM_URLENCODED)
-            //     .header("X-RapidAPI-Host", lcHost)
-            //     .accept(MediaType.APPLICATION_JSON)
-            //     .build();
 
-
-		return null;
+			return null;
 	}
 
 	// For Task 6
@@ -84,6 +73,7 @@ public class OrderingService {
 	public List<PizzaOrder> getPendingOrdersByEmail(String email) {
 		return ordersRepo.getPendingOrdersByEmail(email);
 	}
+
 
 	// For Task 7
 	// WARNING: Do not change the method's signature or its implemenation

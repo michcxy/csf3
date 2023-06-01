@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { PizzaService } from '../pizza.service';
 import { Order } from '../models';
@@ -14,6 +14,9 @@ export class OrdersComponent {
 
   pizzaSvc = inject(PizzaService)
 
+  delivered: boolean = false
+
+  @Input()
   orders : any
 
   ngOnInit(): void {
@@ -22,8 +25,12 @@ export class OrdersComponent {
 
   getOrderFromService(order: Order) {
     const orderList = this.pizzaSvc.getOrders(order);
-    // Use the order object in your component
     this.orders = orderList
   }
- 
+  
+  pizzaDelivered(){
+    this.delivered = true;
+  }
+
+
 }

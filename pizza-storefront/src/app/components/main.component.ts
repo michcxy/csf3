@@ -32,6 +32,8 @@ export class MainComponent {
 
   pizzaSvc = inject(PizzaService)
 
+  email: String = ''
+
   constructor() { }
 
   ngOnInit(): void {
@@ -53,9 +55,9 @@ export class MainComponent {
     .catch(err => {
       alert(JSON.stringify(err))
     })
-    //{email}
-    this.router.navigate(['/order'])
     this.sendOrderToService(order)
+    this.email = this.form.value['email']
+    this.router.navigate(['/orders', this.email])
   }
 
   sendOrderToService(order: Order) {

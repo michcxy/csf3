@@ -2,6 +2,9 @@
 
 <div *ngFor="let order of orders">
   <p>{{ order.date }}</p>
-  <p>{{ order.orderId }}</p>
+  <p>{{ order.orderId }} <button type="submit" (click)="pizzaDelivered()">Delivered</button> </p>
   <p>{{ order.total }}</p>
+</div>
+<div>
+    <button type="submit" [routerLink]="['/']">Back to Ordering</button>
 </div>

@@ -6,7 +6,12 @@ import java.util.List;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
+
+import com.mongodb.client.result.UpdateResult;
 
 import ibf2022.batch3.assessment.csf.orderbackend.models.PizzaOrder;
 
@@ -46,26 +51,31 @@ public class OrdersRepository {
 			document.append("toppings", order.getToppings());
 
 			mongoTemplate.insert(document, "orders");
-			System.out.println("inserting");
-			System.out.println(order.getToppings());
 	}
 	
 	// TODO: Task 6
 	// WARNING: Do not change the method's signature.
 	// Write the native MongoDB query in the comment below
 	//   Native MongoDB query here for getPendingOrdersByEmail()
+	//  db.orders.find({ email: "example@example.com" })
 	public List<PizzaOrder> getPendingOrdersByEmail(String email) {
-
-		return null;
+		Query query = new Query(Criteria.where("email").is(email));
+        return mongoTemplate.find(query, PizzaOrder.class, "orders");
 	}
 
 	// TODO: Task 7
 	// WARNING: Do not change the method's signature.
 	// Write the native MongoDB query in the comment below
 	//   Native MongoDB query here for markOrderDelivered()
+	// 	db.orders.updateOne(
+	//    { _id: ObjectId("orderId") }, 
+	//    { $set: { delivered: true } } 
+	// )
 	public boolean markOrderDelivered(String orderId) {
-
-		return false;
+		Query query = new Query(Criteria.where("_id").is(orderId));
+		Update update = new Update().set("delivered", true);
+		UpdateResult updateResult = mongoTemplate.updateFirst(query, update, PizzaOrder.class);
+		return updateResult.wasAcknowledged() && updateResult.getModifiedCount() > 0;
 	}
 
 

@@ -14,10 +14,10 @@ export class PizzaService {
   // You may add any parameters and return any type from placeOrder() method
   // Do not change the method name
   placeOrder(order: Order) {
-
-    order.toppings=Object.keys(order.toppings).filter(key => order.toppings[key]);
-    console.info(order.toppings)
-    console.info(order)
+  
+    // order.toppings=Object.keys(order.toppings).filter(key => order.toppings[key]);
+    // console.info(order.toppings)
+    // console.info(order)
 
     return this.http.post<any>('/api/order', order)
 
@@ -31,13 +31,21 @@ export class PizzaService {
   // You may add any parameters and return any type from getOrders() method
   // Do not change the method name
   getOrders(order: Order) {
-    return this.http.get<any>('/api/order/${order.email}')
+    return this.http.get<any>('/api/order/${order.email}').subscribe((response) => {
+      this.orders = response;
+    })
+
+    
   }
 
   // TODO: Task 7
   // You may add any parameters and return any type from delivered() method
   // Do not change the method name
   delivered() {
+  }
+
+  deleteOrder(order: Order){
+    return this.http.delete('/api/order/${order.orderId}');
   }
 
   setOrder(order: Order) {

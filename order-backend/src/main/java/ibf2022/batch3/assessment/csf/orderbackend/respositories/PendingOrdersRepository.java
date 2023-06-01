@@ -9,7 +9,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ibf2022.batch3.assessment.csf.orderbackend.models.PizzaOrder;
-import jakarta.json.Json;
 
 @Repository
 public class PendingOrdersRepository {
@@ -29,18 +28,23 @@ public class PendingOrdersRepository {
 		pizzaOrder.setName(order.getName());
 		pizzaOrder.setEmail(order.getEmail());
 
-		String json = new ObjectMapper().writeValueAsString(pizzaOrder);
-
-		redisTemplate.opsForValue().set("order:" + pizzaOrder.getOrderId(), json);
-
-		return json;
-
+		try {
+			String key = "pizzaOrder:" + pizzaOrder.getOrderId();
+			String value = new ObjectMapper().writeValueAsString(pizzaOrder);
+			redisTemplate.opsForValue().set(key, value);
+			return pizzaOrder.getOrderId();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+        	return "Failed to save PizzaOrder to Redis";
+		}
 	}
+
+    public boolean delete(String orderId) {
+        Long deletedCount = redisTemplate.opsForHash().delete("orders", orderId);
+    	return deletedCount != null && deletedCount > 0;
+    }
 
 	// TODO: Task 7
 	// WARNING: Do not change the method's signature.
-	public boolean delete(String orderId) {
-		return false;
-	}
 
 }
